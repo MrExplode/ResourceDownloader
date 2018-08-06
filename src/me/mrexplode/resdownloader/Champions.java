@@ -31,7 +31,7 @@ public class Champions {
 			"Draven",
 			
 			"Ekko",
-			"Elsie",
+			"Elise",
 			"Evelynn",
 			"Ezreal",
 			
