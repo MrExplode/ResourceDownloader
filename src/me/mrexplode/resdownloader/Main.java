@@ -3,6 +3,7 @@ package me.mrexplode.resdownloader;
 import java.awt.GraphicsEnvironment;
 import java.io.Console;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.Executor;
@@ -15,7 +16,7 @@ public class Main {
 	private static final int maxThread = 5;
 	public static String[] champs = Champions.champList;
 	
-	private static String[] testlist = new String[] {"Darius", "Kindred", "Braum", "Elsie", "Viktor", "Evelynn"};
+	private static String[] testlist = new String[] {"Darius", "Kindred", "Braum", "Elise", "Viktor", "Evelynn"};
 	
 	public static void main(String[] args) {
 		int counter = 0;
@@ -29,7 +30,7 @@ public class Main {
 			}
 			
 			try {
-				System.out.println("Sleepy boi");
+				System.out.println("Sleep");
 				Thread.sleep(150);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
