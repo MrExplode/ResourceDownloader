@@ -22,13 +22,11 @@ public class Champions {
 			"Caitlyn",
 			"Camille",
 			"Cassiopeia",
-			//test it
-			"ChoGath",
+			"Chogath",
 			"Corki",
 			
 			"Darius",
 			"Diana",
-			//test it
 			"DrMundo",
 			"Draven",
 			
@@ -63,7 +61,6 @@ public class Champions {
 			"Jhin",
 			"Jinx",
 			
-			//test it
 			"Kaisa",
 			"Kalista",
 			"Karma",
@@ -73,12 +70,10 @@ public class Champions {
 			"Kayle",
 			"Kayn",
 			"Kennen",
-			//test it
 			"Khazix",
 			"Kindred",
 			"Kled",
-			//test it
-			"Kogmaw",
+			"KogMaw",
 			
 			"LeBlanc",
 			"LeeSin",
@@ -115,7 +110,6 @@ public class Champions {
 			
 			"Rakan",
 			"Rammus",
-			//test it
 			"RekSai",
 			"Renekton",
 			"Rengar",
@@ -154,8 +148,7 @@ public class Champions {
 			"Varus",
 			"Vayne",
 			"Veigar",
-			//test it
-			"VelKoz",
+			"Velkoz",
 			"Vi",
 			"Viktor",
 			"Vladimir",
