@@ -22,7 +22,7 @@ public class Downloader extends Thread {
 			cFolder.mkdirs();
 		}
 		
-		System.out.println();
+		System.out.println("Downloading " + champName + "...\nTo: " + cFolder.getAbsolutePath());
 		
 		int skinNumber = 0;	
 		File img = new File(cFolder, champName + "_" + skinNumber + ".jpg");
@@ -37,7 +37,7 @@ public class Downloader extends Thread {
 			}
 		}
 		
-		System.out.println("Downloading " + champName + "...\nTo: " + cFolder.getAbsolutePath() + "\n" + champName + " download completed with " + (skinNumber - 1)  + " skins\n");
+		System.out.println(champName + " download completed with " + (skinNumber - 1)  + " skins (without default)\n");
 	}
 	
 	public boolean download(String urlName, File path) {
