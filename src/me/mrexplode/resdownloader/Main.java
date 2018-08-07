@@ -3,10 +3,9 @@ package me.mrexplode.resdownloader;
 import java.awt.GraphicsEnvironment;
 import java.io.Console;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
@@ -19,23 +18,18 @@ public class Main {
 	private static String[] testlist = new String[] {"Darius", "Kindred", "Braum", "Elise", "Viktor", "Evelynn"};
 	
 	public static void main(String[] args) {
-		int counter = 0;
-		while (true) {
-			while (Thread.activeCount() <= maxThread) {
-				Downloader d = new Downloader(testlist[counter]);
-				d.start();
-				System.out.println("Thread started: " + testlist[counter]);
-				if (counter < testlist.length)
-					counter++;
-			}
-			
-			try {
-				System.out.println("Sleep");
-				Thread.sleep(150);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		System.out.print("-----===== MrExplode's Resource Downloader ======-----\nYou must know, due Riot's request limit, the complete download must last around 8 minute.\n Because: The limit says: 20 request per sec, and 100 request per 2 min\nLoL currently have 141 champs, the average skin number is 5,7 so we will download around 800 skin");
+		
+		ExecutorService executor = Executors.newFixedThreadPool(maxThread);
+		for (int i = 0; i < testlist.length; i++) {
+			Runnable worker = new Downloader(testlist[i]);
+			executor.execute(worker);
 		}
+		
+		executor.shutdown();
+		while (!executor.isTerminated()) {
+		}
+		System.out.println("Download finished!");
 	}
 	
 	public static boolean startConsole() {
