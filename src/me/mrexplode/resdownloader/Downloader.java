@@ -9,12 +9,22 @@ import java.net.URL;
 
 public class Downloader extends Thread {
 	
+	public final String URL_BASE = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+	
 	private String champName;
 	private int[] knownGaps;
+	private int skinID;
 	
 	public Downloader(String champName, int... knownGaps) {
 		this.champName = champName;
 		this.knownGaps = knownGaps;
+		this.skinID = 0;
+	}
+	
+	public Downloader(String champName, int skinID) {
+		this.champName = champName;
+		this.knownGaps = null;
+		this.skinID = skinID;
 	}
 
 	@Override
@@ -24,10 +34,20 @@ public class Downloader extends Thread {
 			cFolder.mkdirs();
 		}
 		
-		System.out.println("Downloading " + champName + "...\nTo: " + cFolder.getAbsolutePath());
-		long start = System.currentTimeMillis();
+		System.out.println("Downloading " + champName + " To: " + cFolder.getAbsolutePath());
 		
-		int skins = downloadSequence(champName, cFolder, knownGaps);
+		long start = System.currentTimeMillis();
+		int skins = 1;
+		
+		if (knownGaps == null && skinID != 0) {
+			
+			File img = new File(Main.path, champName + "_" + skinID + ".jpg");
+			download(URL_BASE + champName + "_" + skinID + ".jpg", img);
+			
+		} else {
+			
+			skins = downloadSequence(champName, cFolder, knownGaps);
+		}
 		
 		long end = (System.currentTimeMillis() - start) - (skins * 100 + 100);//+100 for the default skin, the return exclude that
 		System.out.println(champName + " download completed in " + end + "ms with " +skins + " skins (without default)\n");
@@ -46,28 +66,29 @@ public class Downloader extends Thread {
 		int gapNum = 0;
 		File img = new File(cFolder, champName + "_" + skinNumber + ".jpg");
 		
+		//just to do one more try at gap jump
 		int var1 = 0;
 		while (true) {
-			if (download("http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + champName + "_" + skinNumber + ".jpg", img)) {
+			if (download(URL_BASE + champName + "_" + skinNumber + ".jpg", img)) {
 				skinNumber++;
 				img  = new File(cFolder, champName + "_" + skinNumber + ".jpg");
-				System.out.println("DEBUG: normal downloaded with number " + (skinNumber - 1));
+				debug("normal downloaded with number " + (skinNumber - 1));
 			} else {
 				if (knownGaps.length == 1 && knownGaps[0] == 0) {
-					System.out.println("DEBUG: tried to jump the gap, but not specified, thats all");
+					debug("tried to jump the gap, but not specified, thats all");
 					break;
 				} else {
 					skinNumber += knownGaps[gapNum] - 1;
-					System.out.println("DEBUG: successfully jumped gap with amount " + knownGaps[gapNum] + ", now skinNumber = " + skinNumber);
+					debug("successfully jumped gap with amount " + knownGaps[gapNum] + ", now skinNumber = " + skinNumber);
 					if (knownGaps.length-1 > gapNum) {
 						gapNum++;
-						System.out.println("DEBUG: gapNum increased to " + gapNum);
+						debug("gapNum increased to " + gapNum);
 					} else {
 						if (var1 == 0) {
 							var1++;
 							//if we not increasing, we still need to run after the jump to download
 						} else {
-							System.out.println("DEBUG: end it boi there is no more gap, we can chill");
+							debug("end it boi there is no more gap, we can chill");
 							break;
 						}
 					}
@@ -109,6 +130,10 @@ public class Downloader extends Thread {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+	
+	private void debug(String log) {
+		if (Main.debug) System.out.println("DEBUG: " + log);
 	}
 	
 }
