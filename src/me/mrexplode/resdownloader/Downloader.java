@@ -7,24 +7,63 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+enum DownloadType {
+	COMPLETE, SINGLE, SINGLE_CATEGORIZED;
+}
+
 public class Downloader extends Thread {
 	
-	public final String URL_BASE = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+	public static final String URL_BASE = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
 	
 	private String champName;
 	private int[] knownGaps;
 	private int skinID;
+	private String categoryFolder;
+	private DownloadType downloadType;
 	
+	/**
+	 * Constructor for full champion download
+	 * 
+	 * @param champName
+	 * @param knownGaps
+	 */
 	public Downloader(String champName, int... knownGaps) {
 		this.champName = champName;
 		this.knownGaps = knownGaps;
 		this.skinID = 0;
+		this.categoryFolder = null;
+		this.downloadType = DownloadType.COMPLETE;
 	}
 	
+	/**
+	 * Constructor for a single-skin download
+	 * 
+	 * @param champName
+	 * @param skinID
+	 */
 	public Downloader(String champName, int skinID) {
 		this.champName = champName;
 		this.knownGaps = null;
 		this.skinID = skinID;
+		this.categoryFolder = null;
+		this.downloadType = DownloadType.SINGLE;
+	}
+	
+	/**
+	 * Constructor specially for single-skin, saving to specified folder.<br>
+	 * 
+	 * If the folder file is not yet created, the constructor will create it
+	 * 
+	 * @param champName
+	 * @param folder
+	 * @param skinID
+	 */
+	public Downloader(String champName, String folder, int skinID) {
+		this.champName = champName;
+		this.knownGaps = null;
+		this.skinID = skinID;
+		this.categoryFolder = folder;
+		this.downloadType = DownloadType.SINGLE_CATEGORIZED;
 	}
 
 	@Override
@@ -39,12 +78,17 @@ public class Downloader extends Thread {
 		long start = System.currentTimeMillis();
 		int skins = 1;
 		
-		if (knownGaps == null && skinID != 0) {
+		if (downloadType == DownloadType.SINGLE) {
 			
 			File img = new File(Main.path, champName + "_" + skinID + ".jpg");
 			download(URL_BASE + champName + "_" + skinID + ".jpg", img);
 			
-		} else {
+		} else if (downloadType == DownloadType.SINGLE_CATEGORIZED) {
+			
+			File img = new File(Main.path + File.separator + categoryFolder, champName + "_" + skinID + ".jpg");
+			download(URL_BASE + champName + "_" + skinID + ".jpg", img);
+			
+		} else if (downloadType == DownloadType.COMPLETE) {
 			
 			skins = downloadSequence(champName, cFolder, knownGaps);
 		}

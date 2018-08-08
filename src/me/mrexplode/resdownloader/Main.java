@@ -39,7 +39,7 @@ public class Main {
 			System.out.println("Downloading PROJECT skins...\n\n");
 			for (int i = 0; i < Champions.PROJECT.size(); i++) {
 				String[] ch = Champions.PROJECT.get(i).split("_");
-				Runnable worker = new Downloader(ch[0], Integer.valueOf(ch[1]));
+				Runnable worker = new Downloader(ch[0], "PROJECT", Integer.valueOf(ch[1]));
 				executor.execute(worker);
 			}
 			break;
@@ -48,7 +48,7 @@ public class Main {
 			System.out.println("Downloading Star Guardian skins...\n\n");
 			for (int i = 0; i < Champions.STAR_GUARDIAN.size(); i++) {
 				String[] ch = Champions.STAR_GUARDIAN.get(i).split("_");
-				Runnable worker = new Downloader(ch[0], Integer.valueOf(ch[1]));
+				Runnable worker = new Downloader(ch[0], "StarGuardian", Integer.valueOf(ch[1]));
 				executor.execute(worker);
 			}
 			break;
@@ -57,7 +57,7 @@ public class Main {
 			System.out.println("Download Blood Moon skins...\n\n");
 			for (int i = 0; i < Champions.BLOOD_MOON.size(); i++) {
 				String[] ch = Champions.BLOOD_MOON.get(i).split("_");
-				Runnable worker = new Downloader(ch[0], Integer.valueOf(ch[1]));
+				Runnable worker = new Downloader(ch[0], "BloodMoon", Integer.valueOf(ch[1]));
 				executor.execute(worker);
 			}
 			break;
@@ -66,7 +66,7 @@ public class Main {
 			System.out.println("Downloading Arcade skins...\n\n");
 			for (int i = 0; i < Champions.ARCADE.size(); i++) {
 				String[] ch = Champions.ARCADE.get(i).split("_");
-				Runnable worker = new Downloader(ch[0], Integer.valueOf(ch[1]));
+				Runnable worker = new Downloader(ch[0], "Arcade", Integer.valueOf(ch[1]));
 				executor.execute(worker);
 			}
 			break;
