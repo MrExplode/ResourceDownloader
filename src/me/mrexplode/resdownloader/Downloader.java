@@ -1,11 +1,8 @@
 package me.mrexplode.resdownloader;
 
-import java.io.BufferedInputStream;
+import static me.mrexplode.resdownloader.WebApi.Net.*;
+
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 enum DownloadType {
 	COMPLETE, SINGLE, SINGLE_CATEGORIZED;
@@ -73,28 +70,32 @@ public class Downloader extends Thread {
 			cFolder.mkdirs();
 		}
 		
-		System.out.println("Downloading " + champName + " To: " + cFolder.getAbsolutePath());
+		System.out.println("+ Downloading " + champName + " To: " + cFolder.getAbsolutePath());
 		
 		long start = System.currentTimeMillis();
 		int skins = 1;
 		
-		if (downloadType == DownloadType.SINGLE) {
-			
+		switch (downloadType) {
+		case COMPLETE:
+			skins = downloadSequence(champName, cFolder, knownGaps);
+			break;
+		case SINGLE:
 			File img = new File(Main.path, champName + "_" + skinID + ".jpg");
 			download(URL_BASE + champName + "_" + skinID + ".jpg", img);
-			
-		} else if (downloadType == DownloadType.SINGLE_CATEGORIZED) {
-			
-			File img = new File(Main.path + File.separator + categoryFolder, champName + "_" + skinID + ".jpg");
-			download(URL_BASE + champName + "_" + skinID + ".jpg", img);
-			
-		} else if (downloadType == DownloadType.COMPLETE) {
-			
-			skins = downloadSequence(champName, cFolder, knownGaps);
+			break;
+		case SINGLE_CATEGORIZED:
+			//bugfix
+			cFolder = new File(Main.path + File.separator + categoryFolder);
+			File img0 = new File(Main.path + File.separator + categoryFolder, champName + "_" + skinID + ".jpg");
+			download(URL_BASE + champName + "_" + skinID + ".jpg", img0);
+			break;
+		default:
+			break;
+		
 		}
 		
-		long end = (System.currentTimeMillis() - start) - (skins * 100 + 100);//+100 for the default skin, the return exclude that
-		System.out.println(champName + " download completed in " + end + "ms with " +skins + " skins (without default)\n");
+		long end = System.currentTimeMillis() - start;
+		System.out.println("- " + champName + " download completed in " + end + "ms with " +skins + " skins (without default)\n");
 	}
 	
 	/**
@@ -138,46 +139,9 @@ public class Downloader extends Thread {
 					}
 				}
 			}
-			
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		return skinNumber - 1;
-	}
-	
-	/**
-	 * Downloads a single image from the specified url.
-	 * 
-	 * @param urlName The specified url to the image
-	 * @param path File to save
-	 * @return true if the download succeed, otherwise false. For example if there is no image, the 403 response error will return false
-	 */
-	public boolean download(String urlName, File path) {
-		try {
-			URL url = new URL(urlName);
-			InputStream input = new BufferedInputStream(url.openStream());
-			FileOutputStream fileOutput = new FileOutputStream(path);
-			
-			byte[] buf = new byte[1024];
-			int n = 0;
-			
-			while ((n = input.read(buf)) != -1) {
-				fileOutput.write(buf, 0, n);
-			}
-			input.close();
-			fileOutput.close();
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
-	}
-	
-	private void debug(String log) {
-		if (Main.debug) System.out.println("DEBUG: " + log);
 	}
 	
 }

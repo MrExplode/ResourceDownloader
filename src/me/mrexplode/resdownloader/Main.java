@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import me.mrexplode.resdownloader.WebApi.WebApiManager;
+
 public class Main {
 	
 	public static String path = "/ChampionData";
@@ -19,6 +21,8 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		//if (!startConsole()) return;
+		new WebApiManager().load();
+		System.exit(0);
 		System.out.print("-----===== MrExplode's Resource Downloader ======-----\nYou must know, due Riot's request limit, the complete download must last around 8 minute.\n Because: The limit says: 20 request per sec, and 100 request per 2 min\nLoL currently have 141 champs, the average skin number is 5,7 so we will download around 800 skin.\n\nPlease down what download type you want. <all | project | blood-moon | star-guardian | arcade>: ");
 		
 		BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
@@ -27,6 +31,15 @@ public class Main {
 		ExecutorService executor = Executors.newFixedThreadPool(maxThread);
 		
 		switch (response.toLowerCase()) {
+		default:
+			Champions c = Champions.get(response);
+			if (c != null) {
+				Runnable download = new Downloader(c.name, c.knownGaps);
+				executor.execute(download);
+			} else {
+				System.out.println("Champ not found! (" + response + ")");
+			}
+			break;
 		case "all":
 			System.out.println("Downloading all champion skins, might take long time\n\n");
 			for (Champions champ : Champions.values()) {

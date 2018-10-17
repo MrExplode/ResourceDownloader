@@ -187,6 +187,16 @@ public enum Champions {
 		this.name = name;
 	}
 	
+	public static Champions get(String name) {
+		for (Champions c : Champions.values()) {
+			if (c.name.equalsIgnoreCase(name)) {
+				return c;
+			}
+		}
+		
+		return null;
+	}
+	
 	public static final ArrayList<String> PROJECT = new ArrayList<String>(Arrays.asList(
 			
 			"MasterYi_9",
